@@ -28,7 +28,7 @@ spec:
               key: ETH_NODE
         args:
         - "--http"
-        - "--network=sepolia"
+        - "--network=mainnet"
         - "--http-port=6060"
         - "--http-host=0.0.0.0"
         - "--db-path=/var/lib/juno"
@@ -61,10 +61,10 @@ spec:
   ingressClassName: nginx-ingress-prod
   tls:
     - hosts:
-        - juno.sepolia.iosis.tech
-      secretName: juno-sepolia-tls
+        - juno.mainnet.iosis.tech
+      secretName: juno-mainnet-tls
   rules:
-    - host: juno.sepolia.iosis.tech
+    - host: juno.mainnet.iosis.tech
       http:
         paths:
           - path: /

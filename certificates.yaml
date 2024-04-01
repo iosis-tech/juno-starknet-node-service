@@ -2,12 +2,12 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: juno-sepolia-cert
+  name: juno-mainnet-cert
 spec:
-  secretName: juno-sepolia-tls
+  secretName: juno-mainnet-tls
 
   dnsNames:
-    - juno.sepolia.iosis.tech
+    - juno.mainnet.iosis.tech
   issuerRef:
     name: letsencrypt-http01
     kind: Issuer
