@@ -21,18 +21,18 @@ spec:
         - name: juno-data
           mountPath: /var/lib/juno
         env:
-        - name: ETH_NODE
+        - name: ETH_NODE_SEPOLIA
           valueFrom:
             secretKeyRef:
               name: juno-secret
-              key: ETH_NODE
+              key: ETH_NODE_SEPOLIA
         args:
         - "--http"
         - "--network=sepolia"
         - "--http-port=6060"
         - "--http-host=0.0.0.0"
         - "--db-path=/var/lib/juno"
-        - "--eth-node=$(ETH_NODE)"
+        - "--eth-node=$(ETH_NODE_SEPOLIA)"
       volumes:
       - name: juno-data
         persistentVolumeClaim:
