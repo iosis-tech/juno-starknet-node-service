@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: iosis-tech-sepolia-juno
+
+resources:
+  - deployment.yaml
+  - issuer.yaml
+  - certificates.yaml
+  - pvc.yaml
+
+secretGenerator:
+  - name: juno-secret
+    envs:
+      - secret.env
+    options:
+      disableNameSuffixHash: true

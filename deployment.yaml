@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: juno
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: juno
+  template:
+    metadata:
+      labels:
+        app: juno
+    spec:
+      containers:
+      - name: juno
+        image: nethermind/juno
+        ports:
+        - containerPort: 6060
+        volumeMounts:
+        - name: juno-data
+          mountPath: /var/lib/juno
+        env:
+        - name: ETH_NODE
+          valueFrom:
+            secretKeyRef:
+              name: juno-secret
+              key: ETH_NODE
+        args:
+        - "--http"
+        - "--network=sepolia"
+        - "--http-port=6060"
+        - "--http-host=0.0.0.0"
+        - "--db-path=/var/lib/juno"
+        - "--eth-node=$(ETH_NODE)"
+      volumes:
+      - name: juno-data
+        persistentVolumeClaim:
+          claimName: juno-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: juno-svc
+spec:
+  ports:
+  - port: 80
+    targetPort: 9545
+    protocol: TCP
+    name: http
+  selector:
+    app: juno
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: juno-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 0
+spec:
+  ingressClassName: nginx-ingress-prod
+  tls:
+    - hosts:
+        - juno.sepolia.iosis.tech
+      secretName: juno-sepolia-tls
+  rules:
+    - host: juno.sepolia.iosis.tech
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: juno-svc
+                port:
+                  number: 80
